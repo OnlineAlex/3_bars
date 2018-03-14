@@ -10,27 +10,14 @@ def load_data(filepath):
         return json.load(bars_info)
 
 
-def sort_size_bar(json_str):
-    # Сортируем бары по колличеству мест
-    bars_size = {}
-
-    for bar_id in json_str['features']:
-        bars_size[bar_id['properties']['Attributes']['Name']] = bar_id['properties']['Attributes']['SeatsCount']
-
-    bars_size = sorted(bars_size.items(), key=lambda seats_count: seats_count[1])
-    return bars_size
-
-
 def get_biggest_bar(bars_info):
-    sorted_bars = sort_size_bar(bars_info)
-    biggest_bar = sorted_bars[-1][0]
-    return "Самый большой бар — " + biggest_bar
+    max_bars = max(bars_info['features'], key=lambda bar: bar['properties']['Attributes']['SeatsCount'])
+    return "Самый большой бар — " + max_bars['properties']['Attributes']['Name']
 
 
 def get_smallest_bar(bars_info):
-    sorted_bars = sort_size_bar(bars_info)
-    smallest_bar = sorted_bars[0][0]
-    return "Самый маленький бар — " + smallest_bar
+    min_bars = min(bars_info['features'], key=lambda bar: bar['properties']['Attributes']['SeatsCount'])
+    return "Самый маленький бар — " + min_bars['properties']['Attributes']['Name']
 
 
 def get_user_location(coordinates):
@@ -56,7 +43,6 @@ def get_closest_bar(json_str, user_lon, user_lat):
         if bar_distance < min_distance:
             min_distance = bar_distance
             closest_bar = bar['properties']['Attributes']['Name']
-
     return closest_bar
 
 
