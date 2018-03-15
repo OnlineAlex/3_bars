@@ -26,6 +26,12 @@ def get_smallest_bar(bars_info):
     return smallest_bar['properties']['Attributes']['Name']
 
 
+def get_user_location():
+    longitude = float(input('Широта на которой вы находитесь:'))
+    latitude = float(input('Долгота на которой вы находитесь:'))
+    return longitude, latitude
+
+
 def get_closest_bar(bars_info, user_lon, user_lat):
     closest_bar = min(bars_info,
                       key=lambda bar: calculates_distance(user_lon,
@@ -77,14 +83,11 @@ if __name__ == '__main__':
     print('Самый большой бар — {}'.format(get_biggest_bar(bars_data)))
     print('Самый маленький бар — {}'.format(get_smallest_bar(bars_data)))
 
-    print('\nСейчас я найду ближайший к вам бар')
     try:
-        longitude = float(input('Широта на которой вы находитесь:'))
-        latitude = float(input('Долгота на которой вы находитесь:'))
+        user_longitude, user_latitude = get_user_location()
+        print('Ближайший бар — {}'.format(get_closest_bar(bars_data,
+                                                          user_longitude,
+                                                          user_latitude)))
     except ValueError:
         print('Координты введены не верно. Пишите только цифры.'
               'Напр: "55.9862994"')
-    else:
-        print('Ближайший бар — {}'.format(get_closest_bar(bars_data,
-                                                          longitude,
-                                                          latitude)))
