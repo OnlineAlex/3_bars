@@ -65,23 +65,26 @@ if __name__ == '__main__':
     except IndexError:
         print('Ошибка! Вы не указали путь к файлу JSON.')
         print('Сработает, если написать "python bars.py <путь к файлу>"')
+        exit()
     except FileNotFoundError:
         print('Ошибка! Система не нашла такой файл.')
         print('Пробуйте указать полный путь к файлу.')
+        exit()
     except ValueError:
         print('Ошибка. Файл должен быть в формате JSON.')
-    else:
-        print('Самый большой бар — {}'.format(get_biggest_bar(bars_data)))
-        print('Самый маленький бар — {}'.format(get_smallest_bar(bars_data)))
+        exit()
 
-        print('\nСейчас я найду ближайший к вам бар')
-        try:
-            longitude = float(input('Широта на которой вы находитесь:'))
-            latitude = float(input('Долгота на которой вы находитесь:'))
-        except ValueError:
-            print('Координты введены не верно. Пишите только цифры.'
-                  'Напр: "55.9862994"')
-        else:
-            print('Ближайший бар — {}'.format(get_closest_bar(bars_data,
-                                                              longitude,
-                                                              latitude)))
+    print('Самый большой бар — {}'.format(get_biggest_bar(bars_data)))
+    print('Самый маленький бар — {}'.format(get_smallest_bar(bars_data)))
+
+    print('\nСейчас я найду ближайший к вам бар')
+    try:
+        longitude = float(input('Широта на которой вы находитесь:'))
+        latitude = float(input('Долгота на которой вы находитесь:'))
+    except ValueError:
+        print('Координты введены не верно. Пишите только цифры.'
+              'Напр: "55.9862994"')
+    else:
+        print('Ближайший бар — {}'.format(get_closest_bar(bars_data,
+                                                          longitude,
+                                                          latitude)))
