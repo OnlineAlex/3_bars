@@ -8,6 +8,22 @@ def load_data(filepath):
         return json.load(bars_file)['features']
 
 
+def main(bars_info):
+    print('Самый большой бар — {}'.format(get_biggest_bar(bars_info)))
+    print('Самый маленький бар — {}'.format(get_smallest_bar(bars_info)))
+
+    print('Сейчас я найду ближайший к вам бар')
+    try:
+        user_longitude, user_latitude = get_user_location()
+    except ValueError:
+        print('Координты введены не верно. Пишите только цифры.'
+              'Напр: "55.9862994"')
+    else:
+        print('Ближайший бар — {}'.format(get_closest_bar(bars_info,
+                                                          user_longitude,
+                                                          user_latitude)))
+
+
 def get_biggest_bar(bars_info):
     biggest_bar = max(bars_info,
                       key=lambda bar: bar['properties']
@@ -69,25 +85,10 @@ if __name__ == '__main__':
         bars_data_file = sys.argv[1]
         bars_data = load_data(bars_data_file)
     except IndexError:
-        print('Ошибка! Вы не указали путь к файлу JSON.')
-        print('Сработает, если написать "python bars.py <путь к файлу>"')
-        exit()
+        print('Укажите путь к файлу JSON.')
     except FileNotFoundError:
-        print('Ошибка! Система не нашла такой файл.')
-        print('Пробуйте указать полный путь к файлу.')
-        exit()
+        print('Файл не найден')
     except ValueError:
         print('Ошибка. Файл должен быть в формате JSON.')
-        exit()
-
-    print('Самый большой бар — {}'.format(get_biggest_bar(bars_data)))
-    print('Самый маленький бар — {}'.format(get_smallest_bar(bars_data)))
-
-    try:
-        user_longitude, user_latitude = get_user_location()
-        print('Ближайший бар — {}'.format(get_closest_bar(bars_data,
-                                                          user_longitude,
-                                                          user_latitude)))
-    except ValueError:
-        print('Координты введены не верно. Пишите только цифры.'
-              'Напр: "55.9862994"')
+    else:
+        main(bars_data)
