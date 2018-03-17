@@ -8,43 +8,6 @@ def load_data(filepath):
         return json.load(bars_file)['features']
 
 
-def main():
-    try:
-        bars_data_file = sys.argv[1]
-        bars_info = load_data(bars_data_file)
-    except IndexError:
-        print('Укажите путь к файлу JSON.')
-    except FileNotFoundError:
-        print('Файл не найден')
-    except ValueError:
-        print('Ошибка. Файл должен быть в формате JSON.')
-    else:
-        print('Самый большой бар — {}'.format(
-            get_biggest_bar(bars_info)['properties']['Attributes']['Name']
-        ))
-
-        print('Самый маленький бар — {}'.format(
-            get_smallest_bar(bars_info)['properties']['Attributes']['Name']
-        ))
-
-        print('Сейчас я найду ближайший к вам бар')
-        try:
-            user_longitude, user_latitude = get_user_location()
-        except ValueError:
-            print('Координты введены не верно. Пишите только цифры.'
-                  'Напр: "55.9862994"')
-        else:
-            closest_bar = get_closest_bar(
-                bars_info,
-                user_longitude,
-                user_latitude
-            )
-
-            print('Ближайший бар — {}'.format(
-                closest_bar['properties']['Attributes']['Name']
-            ))
-
-
 def get_biggest_bar(bars_info):
     biggest_bar = max(
         bars_info,
@@ -106,4 +69,40 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        bars_info = load_data(sys.argv[1])
+    except IndexError:
+        print('Укажите путь к файлу JSON.')
+        exit()
+    except FileNotFoundError:
+        print('Файл не найден')
+        exit()
+    except ValueError:
+        print('Ошибка. Файл должен быть в формате JSON.')
+        exit()
+
+    print('Самый большой бар — {}'.format(
+        get_biggest_bar(bars_info)['properties']['Attributes']['Name']
+    ))
+
+    print('Самый маленький бар — {}'.format(
+        get_smallest_bar(bars_info)['properties']['Attributes']['Name']
+    ))
+
+    print('Сейчас я найду ближайший к вам бар')
+    try:
+        user_longitude, user_latitude = get_user_location()
+    except ValueError:
+        print('Координты введены не верно. Пишите только цифры.'
+              'Напр: "55.9862994"')
+    else:
+        closest_bar = get_closest_bar(
+            bars_info,
+            user_longitude,
+            user_latitude
+        )
+
+        print('Ближайший бар — {}'.format(
+            closest_bar['properties']['Attributes']['Name']
+        ))
+
