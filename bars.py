@@ -32,6 +32,15 @@ def get_user_location():
     return longitude, latitude
 
 
+def isfloat(check_data):
+    try:
+        float(check_data)
+        return True
+    except ValueError:
+        return False
+
+
+
 def get_closest_bar(bars_info, user_lon, user_lat):
     closest_bar = min(
         bars_info,
@@ -73,36 +82,31 @@ if __name__ == '__main__':
         bars_info = load_data(sys.argv[1])
     except IndexError:
         print('Укажите путь к файлу JSON.')
-        exit()
     except FileNotFoundError:
         print('Файл не найден')
-        exit()
     except ValueError:
         print('Ошибка. Файл должен быть в формате JSON.')
-        exit()
+    else:
+        print('Самый большой бар — {}'.format(
+            get_biggest_bar(bars_info)['properties']['Attributes']['Name']
+        ))
 
-    print('Самый большой бар — {}'.format(
-        get_biggest_bar(bars_info)['properties']['Attributes']['Name']
-    ))
+        print('Самый маленький бар — {}'.format(
+            get_smallest_bar(bars_info)['properties']['Attributes']['Name']
+        ))
 
-    print('Самый маленький бар — {}'.format(
-        get_smallest_bar(bars_info)['properties']['Attributes']['Name']
-    ))
-
-    print('Сейчас я найду ближайший к вам бар')
-    try:
+        print('Сейчас я найду ближайший к вам бар')
         user_longitude, user_latitude = get_user_location()
-    except ValueError:
-        print('Координты введены не верно. Пишите только цифры.'
-              'Напр: "55.9862994"')
+        if isfloat(user_longitude) and isfloat(user_latitude):
+            closest_bar = get_closest_bar(
+                bars_info,
+                user_longitude,
+                user_latitude
+            )
 
-    closest_bar = get_closest_bar(
-        bars_info,
-        user_longitude,
-        user_latitude
-    )
-
-    print('Ближайший бар — {}'.format(
-        closest_bar['properties']['Attributes']['Name']
-    ))
-
+            print('Ближайший бар — {}'.format(
+                closest_bar['properties']['Attributes']['Name']
+            ))
+        else:
+            print('Координты введены не верно. Пишите только цифры.'
+                  'Напр: "55.9862994"')
