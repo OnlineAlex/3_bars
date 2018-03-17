@@ -95,14 +95,14 @@ if __name__ == '__main__':
     except ValueError:
         print('Координты введены не верно. Пишите только цифры.'
               'Напр: "55.9862994"')
-    else:
-        closest_bar = get_closest_bar(
-            bars_info,
-            user_longitude,
-            user_latitude
-        )
 
-        print('Ближайший бар — {}'.format(
-            closest_bar['properties']['Attributes']['Name']
-        ))
+    closest_bar = get_closest_bar(
+        bars_info,
+        user_longitude,
+        user_latitude
+    )
+
+    print('Ближайший бар — {}'.format(
+        closest_bar['properties']['Attributes']['Name']
+    ))
 
