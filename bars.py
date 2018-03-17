@@ -83,29 +83,21 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 if __name__ == '__main__':
     try:
         bars_data = load_data(sys.argv[1])
-    except IndexError:
-        print('Укажите путь к файлу JSON.')
-        exit()
-    except FileNotFoundError:
-        print('Файл не найден')
-        exit()
-    except ValueError:
-        print('Ошибка. Файл должен быть в формате JSON.')
-        exit()
 
-    print_info_bars(get_biggest_bar(bars_data), 'большой')
-    print_info_bars(get_smallest_bar(bars_data), 'маленький')
+        print_info_bars(get_biggest_bar(bars_data), 'большой')
+        print_info_bars(get_smallest_bar(bars_data), 'маленький')
 
-    print('Сейчас я найду ближайший к вам бар')
-    user_longitude, user_latitude = get_user_location()
-    if isfloat(user_longitude) and isfloat(user_latitude):
+        print('Сейчас я найду ближайший к вам бар')
+        user_longitude, user_latitude = get_user_location()
         user_closest_bar = get_closest_bar(
             bars_data,
             user_longitude,
             user_latitude
         )
-
         print_info_bars(user_closest_bar, 'ближайший')
-    else:
-        print('Координты введены не верно. Пишите только цифры.'
-              'Напр: "55.9862994"')
+    except IndexError:
+        print('Укажите путь к файлу JSON.')
+    except FileNotFoundError:
+        print('Файл не найден')
+    except ValueError:
+        print('Ошибка значения')
