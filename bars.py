@@ -40,6 +40,10 @@ def isfloat(check_data):
         return False
 
 
+def print_info_bars(bar, type_info):
+    bar_name = bar['properties']['Attributes']['Name']
+    print('Самый {} бар — {}'.format(type_info, bar_name))
+
 def get_closest_bar(bars_info, user_lon, user_lat):
     closest_bar = min(
         bars_info,
@@ -89,13 +93,8 @@ if __name__ == '__main__':
         print('Ошибка. Файл должен быть в формате JSON.')
         exit()
 
-    print('Самый большой бар — {}'.format(
-        get_biggest_bar(bars_data)['properties']['Attributes']['Name']
-    ))
-
-    print('Самый маленький бар — {}'.format(
-        get_smallest_bar(bars_data)['properties']['Attributes']['Name']
-    ))
+    print_info_bars(get_biggest_bar(bars_data), 'большой')
+    print_info_bars(get_smallest_bar(bars_data), 'маленький')
 
     print('Сейчас я найду ближайший к вам бар')
     user_longitude, user_latitude = get_user_location()
@@ -106,9 +105,7 @@ if __name__ == '__main__':
             user_latitude
         )
 
-        print('Ближайший бар — {}'.format(
-            user_closest_bar['properties']['Attributes']['Name']
-        ))
+        print_info_bars(user_closest_bar, 'ближайший')
     else:
         print('Координты введены не верно. Пишите только цифры.'
               'Напр: "55.9862994"')
