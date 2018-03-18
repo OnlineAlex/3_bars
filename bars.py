@@ -77,17 +77,10 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 if __name__ == '__main__':
 
     try:
-        if len(sys.argv) == 1:
-            user_filepath = input('Укажите путь к файлу: ')
-        else:
-            user_filepath = sys.argv[1]
-
-        bars_data = load_data(user_filepath)
-
-        print_info_bars(get_biggest_bar(bars_data), 'большой')
-        print_info_bars(get_smallest_bar(bars_data), 'маленький')
-
+        bars_data = load_data(sys.argv[1])
         user_longitude, user_latitude = get_user_location()
+    except IndexError:
+        print('Укажите путь к файлу JSON.')
     except FileNotFoundError:
         print('Файл не найден')
     except JSONDecodeError:
@@ -102,3 +95,6 @@ if __name__ == '__main__':
             user_latitude
         )
         print_info_bars(user_closest_bar, 'ближайший')
+
+        print_info_bars(get_biggest_bar(bars_data), 'большой')
+        print_info_bars(get_smallest_bar(bars_data), 'маленький')
