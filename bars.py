@@ -3,6 +3,9 @@ import json
 from json.decoder import JSONDecodeError
 from math import radians, cos, sin, asin, sqrt
 
+def check_filepath_json(filepath):
+    pass
+
 
 def load_data(filepath):
     with open(filepath, 'r', encoding='utf8') as bars_file:
@@ -75,26 +78,30 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        user_filepath = input('Укажите путь к файлу: ')
+    else:
+        user_filepath = sys.argv[1]
 
     try:
-        bars_data = load_data(sys.argv[1])
-        user_longitude, user_latitude = get_user_location()
-    except IndexError:
-        print('Укажите путь к файлу JSON.')
+        bars_data = load_data(user_filepath)
     except FileNotFoundError:
         print('Файл не найден')
     except JSONDecodeError:
         print('Ошибка. Файл должен быть в формате .JSON')
-    except ValueError:
-        print('Координты введены не верно. '
-              'Пишите только цифры. Напр: "55.9862994"')
     else:
-        user_closest_bar = get_closest_bar(
-            bars_data,
-            user_longitude,
-            user_latitude
-        )
-        print_info_bars(user_closest_bar, 'ближайший')
-
         print_info_bars(get_biggest_bar(bars_data), 'большой')
         print_info_bars(get_smallest_bar(bars_data), 'маленький')
+
+        try:
+            user_longitude, user_latitude = get_user_location()
+        except ValueError:
+            print('Координты введены не верно.')
+        else:
+            user_closest_bar = get_closest_bar(
+                bars_data,
+                user_longitude,
+                user_latitude
+            )
+            print_info_bars(user_closest_bar, 'ближайший')
+
