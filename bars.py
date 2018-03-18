@@ -3,13 +3,15 @@ import json
 from json.decoder import JSONDecodeError
 from math import radians, cos, sin, asin, sqrt
 
-def check_filepath_json(filepath):
-    pass
-
 
 def load_data(filepath):
-    with open(filepath, 'r', encoding='utf8') as bars_file:
-        return json.load(bars_file)['features']
+    try:
+        with open(filepath, 'r', encoding='utf8') as bars_file:
+            return json.load(bars_file)['features']
+    except FileNotFoundError:
+        raise FileNotFoundError('Файл не найден')
+    except ValueError:
+        raise ValueError('Ошибка. Файл должен быть в формате .JSON')
 
 
 def get_biggest_bar(bars_info):
@@ -83,25 +85,20 @@ if __name__ == '__main__':
     else:
         user_filepath = sys.argv[1]
 
-    try:
-        bars_data = load_data(user_filepath)
-    except FileNotFoundError:
-        print('Файл не найден')
-    except JSONDecodeError:
-        print('Ошибка. Файл должен быть в формате .JSON')
-    else:
-        print_info_bars(get_biggest_bar(bars_data), 'большой')
-        print_info_bars(get_smallest_bar(bars_data), 'маленький')
+    bars_data = load_data(user_filepath)
+    print_info_bars(get_biggest_bar(bars_data), 'большой')
+    print_info_bars(get_smallest_bar(bars_data), 'маленький')
 
-        try:
-            user_longitude, user_latitude = get_user_location()
-        except ValueError:
-            print('Координты введены не верно.')
-        else:
-            user_closest_bar = get_closest_bar(
-                bars_data,
-                user_longitude,
-                user_latitude
-            )
-            print_info_bars(user_closest_bar, 'ближайший')
+    try:
+        user_longitude, user_latitude = get_user_location()
+    except ValueError:
+        print('Координты введены не верно. '
+              'Пишите только цифры. Напр: "55.9862994"')
+    else:
+        user_closest_bar = get_closest_bar(
+            bars_data,
+            user_longitude,
+            user_latitude
+        )
+        print_info_bars(user_closest_bar, 'ближайший')
 
