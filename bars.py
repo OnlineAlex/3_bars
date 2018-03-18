@@ -1,6 +1,5 @@
 import sys
 import json
-from json.decoder import JSONDecodeError
 from math import radians, cos, sin, asin, sqrt
 
 
