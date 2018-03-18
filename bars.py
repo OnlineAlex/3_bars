@@ -89,8 +89,6 @@ if __name__ == '__main__':
         print('Файл не найден')
     except JSONDecodeError:
         print('Ошибка. Файл должен быть в формате .JSON')
-    except UnicodeDecodeError:
-        print('Неправильная кодировка файла.')
     except ValueError:
         print('Координты введены не верно. '
               'Пишите только цифры. Напр: "55.9862994"')
