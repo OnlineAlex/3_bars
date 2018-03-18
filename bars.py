@@ -1,5 +1,6 @@
 import sys
 import json
+from json.decoder import JSONDecodeError
 from math import radians, cos, sin, asin, sqrt
 
 
@@ -30,22 +31,6 @@ def get_user_location():
     longitude = float(input('Широта на которой вы находитесь:'))
     latitude = float(input('Долгота на которой вы находитесь:'))
     return longitude, latitude
-
-
-def search_closest_bar():
-    try:
-        user_longitude, user_latitude = get_user_location()
-    except ValueError:
-        print('Координты введены не верно. Пишите только цифры.'
-              'Напр: "55.9862994"')
-    else:
-        user_closest_bar = get_closest_bar(
-            bars_data,
-            user_longitude,
-            user_latitude
-        )
-        print_info_bars(user_closest_bar, 'ближайший')
-
 
 
 def print_info_bars(bar, type_info):
@@ -90,17 +75,29 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
+
     try:
         bars_data = load_data(sys.argv[1])
     except IndexError:
         print('Укажите путь к файлу JSON.')
     except FileNotFoundError:
         print('Файл не найден')
-    except ValueError:
-        print('Ошибка значения')
+    except JSONDecodeError:
+        print('Ошибка. Файл должен быть в формате .JSON')
     else:
         print_info_bars(get_biggest_bar(bars_data), 'большой')
         print_info_bars(get_smallest_bar(bars_data), 'маленький')
 
         print('Сейчас я найду ближайший к вам бар')
-        search_closest_bar()
+        try:
+            user_longitude, user_latitude = get_user_location()
+        except ValueError:
+            print('Координты введены не верно. '
+                  'Пишите только цифры. Напр: "55.9862994"')
+        else:
+            user_closest_bar = get_closest_bar(
+                bars_data,
+                user_longitude,
+                user_latitude
+            )
+            print_info_bars(user_closest_bar, 'ближайший')
