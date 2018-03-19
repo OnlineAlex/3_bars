@@ -8,9 +8,9 @@ def load_data(filepath):
         with open(filepath, 'r', encoding='utf8') as bars_file:
             return json.load(bars_file)['features']
     except FileNotFoundError:
-        exit('Файл не найден')
+        return FileNotFoundError
     except ValueError:
-        exit('Ошибка. Файл должен быть в формате .JSON')
+        return ValueError
 
 
 def get_biggest_bar(bars_info):
@@ -81,9 +81,13 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         exit('Укажите путь к файлу')
-
     user_filepath = sys.argv[1]
+
     bars_data = load_data(user_filepath)
+    if bars_data is FileNotFoundError:
+        exit('Файл не найден')
+    elif bars_data is ValueError:
+        exit('Ошибка. Файл должен быть в формате .JSON')
 
     print_info_bars(get_biggest_bar(bars_data), 'большой')
     print_info_bars(get_smallest_bar(bars_data), 'маленький')
