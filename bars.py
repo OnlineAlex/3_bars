@@ -8,9 +8,9 @@ def load_data(filepath):
         with open(filepath, 'r', encoding='utf8') as bars_file:
             return json.load(bars_file)['features']
     except FileNotFoundError:
-        raise FileNotFoundError('Файл не найден')
+        exit('Файл не найден')
     except ValueError:
-        raise ValueError('Ошибка. Файл должен быть в формате .JSON')
+        exit('Ошибка. Файл должен быть в формате .JSON')
 
 
 def get_biggest_bar(bars_info):
@@ -79,25 +79,24 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        user_filepath = input('Укажите путь к файлу: ')
-    else:
-        user_filepath = sys.argv[1]
+    if len(sys.argv) < 2:
+        exit('Укажите путь к файлу')
 
+    user_filepath = sys.argv[1]
     bars_data = load_data(user_filepath)
+
     print_info_bars(get_biggest_bar(bars_data), 'большой')
     print_info_bars(get_smallest_bar(bars_data), 'маленький')
 
     try:
         user_longitude, user_latitude = get_user_location()
     except ValueError:
-        print('Координты введены не верно. '
-              'Пишите только цифры. Напр: "55.9862994"')
-    else:
-        user_closest_bar = get_closest_bar(
-            bars_data,
-            user_longitude,
-            user_latitude
-        )
-        print_info_bars(user_closest_bar, 'ближайший')
+        exit('Координты введены не верно. '
+             'Пишите только цифры. Напр: "55.9862994"')
 
+    user_closest_bar = get_closest_bar(
+        bars_data,
+        user_longitude,
+        user_latitude
+    )
+    print_info_bars(user_closest_bar, 'ближайший')
