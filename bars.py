@@ -97,7 +97,7 @@ if __name__ == '__main__':
     user_filepath = sys.argv[1]
 
     bars_data = load_data(user_filepath)
-    if bars_data:
+    if type(bars_data) is not list:
         exit(get_error_report(bars_data))
 
     print_info_bars(get_biggest_bar(bars_data), 'большой')
