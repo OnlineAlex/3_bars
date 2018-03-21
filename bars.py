@@ -1,29 +1,11 @@
 import sys
 import json
 from math import radians, cos, sin, asin, sqrt
-from json.decoder import JSONDecodeError
-
-
-def get_error_report(name_error):
-    errors_reports = {
-        ValueError: 'Координты введены не верно.'
-                    'Пишите только цифры. Напр: "55.9862994"',
-        IndexError: 'Укажите путь к файлу',
-        FileNotFoundError: 'Файл не найден',
-        JSONDecodeError: 'Ошибка. Файл должен быть в формате .JSON',
-        UnicodeDecodeError: 'Ошибка кодировки. Требуется UTF-8'
-    }
-    return errors_reports[name_error]
 
 
 def load_data(filepath):
-    try:
-        with open(filepath, 'r', encoding='utf8') as bars_file:
-            return json.load(bars_file)['features']
-    except FileNotFoundError:
-        return FileNotFoundError
-    except (JSONDecodeError, UnicodeDecodeError) as coding_error:
-        return type(coding_error)
+    with open(filepath, 'r', encoding='utf8') as bars_file:
+        return json.load(bars_file)['features']
 
 
 def get_biggest_bar(bars_info):
@@ -92,13 +74,14 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        exit(get_error_report(IndexError))
-    user_filepath = sys.argv[1]
-
-    bars_data = load_data(user_filepath)
-    if type(bars_data) is not list:
-        exit(get_error_report(bars_data))
+    try:
+        bars_data = load_data(sys.argv[1])
+    except IndexError:
+        exit('Укажите путь к файлу')
+    except ValueError:
+        exit('Ошибка. Файл должен быть в формате .JSON')
+    except FileNotFoundError:
+        exit('Файл не найден')
 
     print_info_bars(get_biggest_bar(bars_data), 'большой')
     print_info_bars(get_smallest_bar(bars_data), 'маленький')
@@ -106,7 +89,8 @@ if __name__ == '__main__':
     try:
         user_longitude, user_latitude = get_user_location()
     except ValueError:
-        exit(get_error_report(ValueError))
+        exit('Координты введены не верно.'
+             'Пишите только цифры. Напр: "55.9862994"')
 
     user_closest_bar = get_closest_bar(
         bars_data,
@@ -114,3 +98,4 @@ if __name__ == '__main__':
         user_latitude
     )
     print_info_bars(user_closest_bar, 'ближайший')
+
