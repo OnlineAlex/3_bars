@@ -75,14 +75,13 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        exit('Укажите путь к файлу')
 
     try:
         bars_data = load_data(sys.argv[1])
         user_longitude, user_latitude = get_user_location()
-    except FileNotFoundError:
-        exit('Файл не найден')
+    except (FileNotFoundError, IndexError):
+        exit('Файл не найден.'
+             'Попробуйте ввести python bars.py <путь к списку московских баров>')
     except (UnicodeDecodeError, JSONDecodeError):
         exit('Ошибка. Файл должен быть в формате .JSON')
     except ValueError:
