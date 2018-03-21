@@ -75,11 +75,12 @@ def calculates_distance(lon1, lat1, lon2, lat2):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        exit('Укажите путь к файлу')
+
     try:
         bars_data = load_data(sys.argv[1])
         user_longitude, user_latitude = get_user_location()
-    except IndexError:
-        exit('Укажите путь к файлу')
     except FileNotFoundError:
         exit('Файл не найден')
     except (UnicodeDecodeError, JSONDecodeError):
